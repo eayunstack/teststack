@@ -6,7 +6,7 @@ Automated scripts to install openstack in test or development environment.
 
 ####Environment Requirements:
 You need to config your hosts environment before invoking this script.
-This script uses a default configuration, which you can change as your wish in file openstack_envrc :
+This script uses a default configuration, which you can change as your wish in file openstack_envrc and fabfile.py :
 
 1. networks  
     management-network: 10.10.1.0/24
