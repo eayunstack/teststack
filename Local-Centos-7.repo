@@ -1,0 +1,11 @@
+[local-centos-7-base]
+name=Local CentOS 7 Base
+baseurl=http://192.168.3.239/mirrors/CentOS/7/os/x86_64/
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+
+[local-centos-7-update]
+name=Local CentOS 7 Updates
+baseurl=http://192.168.3.239/mirrors/CentOS/7/updates/x86_64/
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7

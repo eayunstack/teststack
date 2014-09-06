@@ -1,0 +1,5 @@
+[local-RDO-icehouse-el7]
+name=Local RDO icehouse for el7
+baseurl=http://192.168.3.239/mirrors/RDO/openstack-icehouse/epel-7/
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-RDO-Icehouse
