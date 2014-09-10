@@ -23,15 +23,21 @@ hosts = ['openstack-controller', 'openstack-network', 'openstack-node1', 'openst
 @roles('allinone')
 def allinone():
     run('yum upgrade -y')
-    run('yum install -y http://mirrors.hustunique.com/epel/7/x86_64/e/epel-release-7-1.noarch.rpm')
+    run('yum install -y https://rdo.fedorapeople.org/rdo-release.rpm')
     run('yum install -y openstack-packstack')
-    run('sed -i "40s#\'RedHat\'#\'RedHat\',\'CentOS\'#" /usr/share/openstack-puppet/modules/mysql/manifests/params.pp')
-    run('sed -i "41s#operatingsystemrelease#operatingsystemmajrelease#"'
-        ' /usr/share/openstack-puppet/modules/mysql/manifests/params.pp')
+
     run('sed -i "13s#operatingsystemrelease#operatingsystemmajrelease#"'
         ' /usr/lib/python2.7/site-packages/packstack/puppet/templates/prescript.pp')
     run('sed -i "47s#operatingsystemrelease#operatingsystemmajrelease#"'
         ' /usr/lib/python2.7/site-packages/packstack/puppet/templates/amqp.pp')
+    run('sed -i "3s#operatingsystemrelease#operatingsystemmajrelease#"'
+        ' /usr/lib/python2.7/site-packages/packstack/puppet/templates/mysql_install.pp')
+
+    run('sed -i "40s#\'RedHat\'#\'RedHat\',\'CentOS\'#"'
+        ' /usr/share/openstack-puppet/modules/mysql/manifests/params.pp')
+    run('sed -i "41s#operatingsystemrelease#operatingsystemmajrelease#"'
+        ' /usr/share/openstack-puppet/modules/mysql/manifests/params.pp')
+
     run('sed -i "112s#\'Fedora\'#\'Fedora\' and $::osoperatingsystemmajrelease < 7#"'
         ' /usr/share/openstack-puppet/modules/nova/manifests/compute/libvirt.pp')
     run('sed -i "107s#operatingsystemrelease#operatingsystemmajrelease#"'
@@ -44,10 +50,10 @@ def allinone():
         ' /usr/share/openstack-puppet/modules/nova/manifests/params.pp')
     run('sed -i "48s#operatingsystemrelease#operatingsystemmajrelease#"'
         ' /usr/share/openstack-puppet/modules/nova/manifests/params.pp')
-    run('sed -i "3s#operatingsystemrelease#operatingsystemmajrelease#"'
-        ' /usr/lib/python2.7/site-packages/packstack/puppet/templates/mysql_install.pp')
+
     run('sed -i "8s#operatingsystemrelease >= 7#operatingsystemmajrelease >= 7#"'
         ' /usr/share/openstack-puppet/modules/apache/manifests/version.pp')
+
     run('packstack --allinone')
 
 
