@@ -409,9 +409,12 @@ def restart_nova():
     run('service openstack-nova-novncproxy restart')
 
 
-def create_snapshot():
+def create_snapshot(name=None):
     for i in hosts:
-        local('virsh snapshot-create %s' % i)
+        if name:
+            local('virsh snapshot-create-as %s %s' % (i, name))
+        else:
+            local('virsh snapshot-create %s' % i)
 
 
 def delete_latest_snapshot():
