@@ -38,12 +38,13 @@ def allinone():
     run('sed -i "41s#operatingsystemrelease#operatingsystemmajrelease#"'
         ' /usr/share/openstack-puppet/modules/mysql/manifests/params.pp')
 
-    run('sed -i "112s#\'Fedora\'#\'Fedora\' and $::osoperatingsystemmajrelease < 7#"'
-        ' /usr/share/openstack-puppet/modules/nova/manifests/compute/libvirt.pp')
-    run('sed -i "107s#operatingsystemrelease#operatingsystemmajrelease#"'
-        ' /usr/share/openstack-puppet/modules/nova/spec/classes/nova_compute_libvirt_spec.rb')
-    run('sed -i "136s#operatingsystemrelease#operatingsystemmajrelease#"'
-        ' /usr/share/openstack-puppet/modules/nova/spec/classes/nova_compute_libvirt_spec.rb')
+    # may not needed.
+    # run('sed -i "112s#\'Fedora\'#\'Fedora\' and $::osoperatingsystemmajrelease < 7#"'
+    #    ' /usr/share/openstack-puppet/modules/nova/manifests/compute/libvirt.pp')
+    # run('sed -i "107s#operatingsystemrelease#operatingsystemmajrelease#"'
+    #    ' /usr/share/openstack-puppet/modules/nova/spec/classes/nova_compute_libvirt_spec.rb')
+    # run('sed -i "136s#operatingsystemrelease#operatingsystemmajrelease#"'
+    #    ' /usr/share/openstack-puppet/modules/nova/spec/classes/nova_compute_libvirt_spec.rb')
     run('sed -i "44s#\'RedHat\'#\'RedHat\',\'CentOS\'#"'
         ' /usr/share/openstack-puppet/modules/nova/manifests/params.pp')
     run('sed -i "47s#\'RedHat\'#\'RedHat\',\'CentOS\'#"'
