@@ -36,5 +36,9 @@ chkconfig openstack-nova-compute on
 }
 
 
+# TODO nic name
 source openstack_envrc
+COMPUTE_IP=$(ip addr list eth0|grep 'inet '|awk '{print $2}'| cut -d/ -f 1)
+COMPUTE_NAME=$(hostname -s)
+COMPUTE_TUN_IP=$(ip addr list eth1|grep 'inet '|awk '{print $2}'| cut -d/ -f 1)
 install_compute

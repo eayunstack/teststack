@@ -114,6 +114,11 @@ chkconfig neutron-openvswitch-agent on
 }
 
 source openstack_envrc
+
+COMPUTE_IP=$(ip addr list eth0|grep 'inet '|awk '{print $2}'| cut -d/ -f 1)
+COMPUTE_NAME=$(hostname -s)
+COMPUTE_TUN_IP=$(ip addr list eth1|grep 'inet '|awk '{print $2}'| cut -d/ -f 1)
+
 prerequisites
 install_neutron
 config_neutron

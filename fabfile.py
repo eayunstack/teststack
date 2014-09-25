@@ -3,21 +3,14 @@ from fabric.api import run, put, runs_once, settings
 
 CONTROLLER_IP = "10.10.1.2"
 CONTROLLER_NAME = "openstack-controller"
-NETWORK_IP = "10.10.1.3"
-NETWORK_NAME = "openstack-network"
-COMPUTE_IP = "10.10.1.4"
-COMPUTE_NAME = "openstack-node1"
-CINDER_IP = "10.10.1.5"
-CINDER_NAME = "openstack-cinder1"
 
 
 env.key_filename = "~/.ssh/id_rsa"
 env.roledefs = {'controller': ['openstack-controller'],
                 'network': ['openstack-network'],
-                'node': ['openstack-node1'],
-                'allinone': ['openstack-allinone'],
+                'node': ['openstack-compute1', 'openstack-compute2'],
                 'cinder': ['openstack-cinder1']}
-hosts = ['openstack-controller', 'openstack-network', 'openstack-node1', 'openstack-cinder1']
+hosts = ['openstack-controller', 'openstack-network', 'openstack-compute1', 'openstack-compute2', 'openstack-cinder1']
 
 
 @roles('allinone')
@@ -236,7 +229,6 @@ def install_nova():
 
 
 @roles('node')
-@runs_once
 def install_compute():
     cd('/tmp')
     put('openstack_envrc')
@@ -293,7 +285,6 @@ def neutron_network_network2():
 
 
 @roles('node')
-@runs_once
 def neutron_compute():
     cd('/tmp')
     put('openstack_envrc')
@@ -371,6 +362,11 @@ def install_openstack():
     execute(install_cinder_node)
 
 
+def add_node():
+    neutron_compute()
+    install_compute()
+
+
 @roles('controller', 'network', 'node', 'cinder')
 @parallel
 def order(command=None):
@@ -387,7 +383,6 @@ def restart_neutron_network():
 
 
 @roles('node')
-@runs_once
 def restart_neutron_node():
     run('service neutron-openvswitch-agent restart')
 
