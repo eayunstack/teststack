@@ -412,14 +412,14 @@ def create_snapshot(name=None):
             local('virsh snapshot-create %s' % i)
 
 
-def delete_latest_snapshot():
+def delete_snapshot(name):
     for i in hosts:
-        local("virsh snapshot-delete %s $(virsh snapshot-list %s| tail -2|head -1|cut -d' ' -f2)" % (i, i))
+        local('virsh snapshot-delete %s %s' % (i, name))
 
 
-def revert_to_latest_snapshot():
+def revert_to_snapshot(name):
     for i in hosts:
-        local("virsh snapshot-revert %s $(virsh snapshot-list %s| tail -2|head -1|cut -d' ' -f2)" % (i, i))
+        local("virsh snapshot-revert %s %s" % (i, name))
 
 
 def start_vms():
