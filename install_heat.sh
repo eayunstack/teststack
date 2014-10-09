@@ -11,7 +11,7 @@ export OS_AUTH_URL=http://$CONTROLLER_NAME:35357/v2.0
 
 install_heat()
 {
-yum install openstack-heat-api openstack-heat-engine \
+yum install -y openstack-heat-api openstack-heat-engine \
   openstack-heat-api-cfn
 }
 
