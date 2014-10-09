@@ -229,6 +229,7 @@ def install_nova():
 
 
 @roles('node')
+@parallel
 def install_compute():
     cd('/tmp')
     put('openstack_envrc')
@@ -285,6 +286,7 @@ def neutron_network_network2():
 
 
 @roles('node')
+@parallel
 def neutron_compute():
     cd('/tmp')
     put('openstack_envrc')
