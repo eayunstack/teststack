@@ -35,6 +35,19 @@ chkconfig libvirtd on
 chkconfig openstack-nova-compute on
 }
 
+config_nova_user()
+{
+  # useful when migrating.
+  usermod -s /bin/bash nova
+  cp -r /root/.ssh /var/lib/nova
+  chown -R nova:nova /var/lib/nova
+}
+
+config_libvirtd()
+{
+  # useful when migrating.
+  echo
+}
 
 # TODO nic name
 source openstack_envrc
