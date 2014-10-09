@@ -376,8 +376,8 @@ def install_openstack():
 
 
 def add_node():
-    neutron_compute()
     install_compute()
+    neutron_compute()
 
 
 @roles('controller', 'network', 'node', 'cinder')
