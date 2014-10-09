@@ -407,14 +407,23 @@ def restart_neutron_controller():
 
 
 @roles('controller')
-@runs_once
-def restart_nova():
+def restart_nova_controller():
     run('service openstack-nova-api restart')
     run('service openstack-nova-cert restart')
     run('service openstack-nova-consoleauth restart')
     run('service openstack-nova-scheduler restart')
     run('service openstack-nova-conductor restart')
     run('service openstack-nova-novncproxy restart')
+
+
+@roles('node')
+def restart_nova_compute():
+    run('service openstack-nova-compute restart')
+
+
+def restart_nova():
+    execute(restart_nova_controller)
+    execute(restart_nova_compute)
 
 
 def create_snapshot(name=None):
