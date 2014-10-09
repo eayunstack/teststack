@@ -349,6 +349,17 @@ def install_cinder_node():
     run('rm -f install_cinder_node.sh')
 
 
+@roles('controller')
+def install_heat():
+    cd('/tmp')
+    put('openstack_envrc')
+    put('install_heat.sh')
+    put('heat.sql')
+    run('chmod a+x install_heat.sh')
+    run('./install_heat.sh')
+    run('rm -f install_heat.sh heat.sql')
+
+
 def install_openstack():
     prepare_openstack_env()
     execute(install_keystone)
