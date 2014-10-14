@@ -19,6 +19,8 @@ TENANT_NETWORK_GATEWAY=10.10.11.1
 TENANT_NETWORK_CIDR=10.10.11.0/24
 
 
+CEILOMETER_TOKEN=e2e473e2625c097cbbf2
+
 # 2. password and email
 PASS=eayun
 EMAIL="test@eayun.test"

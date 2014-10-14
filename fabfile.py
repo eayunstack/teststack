@@ -362,6 +362,53 @@ def install_heat():
     run('rm -f install_heat.sh heat.sql')
 
 
+@roles('controller')
+def install_ceilometer_controller():
+    cd('/tmp')
+    put('openstack_envrc')
+    put('install_ceilometer_controller.sh')
+    run('chmod a+x install_ceilometer_controller.sh')
+    run('./install_ceilometer_controller.sh')
+    run('rm -f install_ceilometer_controller.sh')
+
+
+@roles('node')
+def install_ceilometer_compute():
+    cd('/tmp')
+    put('openstack_envrc')
+    put('install_ceilometer_compute.sh')
+    run('chmod a+x install_ceilometer_compute.sh')
+    run('./install_ceilometer_compute.sh')
+    run('rm -f install_ceilometer_compute.sh')
+
+
+@roles('controller')
+def install_ceilometer_cindercontroller():
+    cd('/tmp')
+    put('openstack_envrc')
+    put('install_ceilometer_cindercontroller.sh')
+    run('chmod a+x install_ceilometer_cindercontroller.sh')
+    run('./install_ceilometer_cindercontroller.sh')
+    run('rm -f install_ceilometer_cindercontroller.sh')
+
+
+@roles('cinder')
+def install_ceilometer_cindernode():
+    cd('/tmp')
+    put('openstack_envrc')
+    put('install_ceilometer_cindernode.sh')
+    run('chmod a+x install_ceilometer_cindernode.sh')
+    run('./install_ceilometer_cindernode.sh')
+    run('rm -f install_ceilometer_cindernode.sh')
+
+
+def install_ceilometer():
+    execute(install_ceilometer_controller)
+    execute(install_ceilometer_compute)
+    execute(install_ceilometer_cindercontroller)
+    execute(install_ceilometer_cindernode)
+
+
 def install_openstack():
     prepare_openstack_env()
     execute(install_keystone)
@@ -374,6 +421,7 @@ def install_openstack():
     execute(install_cinder_controller)
     execute(install_cinder_node)
     execute(install_heat)
+    install_ceilometer()
 
 
 def add_node():
