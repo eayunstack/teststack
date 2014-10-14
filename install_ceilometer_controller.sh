@@ -22,7 +22,7 @@ config_mongo()
   service mongod start
   chkconfig mongod on
   # create mongodb user
-  mongo --host controller --eval '
+  mongo --host $CONTROLLER_NAME --eval '
 db = db.getSiblingDB("ceilometer");
 db.addUser({user: "ceilometer",
             pwd: "'$CEILOMETER_DBPASS'",

@@ -420,8 +420,8 @@ def install_openstack():
     execute(install_horizon)
     execute(install_cinder_controller)
     execute(install_cinder_node)
-    execute(install_heat)
     install_ceilometer()
+    execute(install_heat)
 
 
 def add_node():
