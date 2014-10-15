@@ -476,6 +476,16 @@ def restart_nova():
     execute(restart_nova_compute)
 
 
+@roles('controller')
+def restart_ceilometer():
+    run('service openstack-ceilometer-api restart')
+    run('service openstack-ceilometer-notification restart')
+    run('service openstack-ceilometer-central restart')
+    run('service openstack-ceilometer-collector restart')
+    run('service openstack-ceilometer-alarm-evaluator restart')
+    run('service openstack-ceilometer-alarm-notifier restart')
+
+
 def create_snapshot(name=None):
     for i in hosts:
         if name:
