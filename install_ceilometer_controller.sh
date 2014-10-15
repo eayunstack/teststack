@@ -105,3 +105,4 @@ set_env
 install_ceilometer
 config_ceilometer
 start_ceilometer
+config_glance
