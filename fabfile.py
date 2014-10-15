@@ -1,5 +1,6 @@
 from fabric.api import env, local, parallel, roles, execute, cd
 from fabric.api import run, put, runs_once, settings
+import time
 
 CONTROLLER_IP = "10.10.1.2"
 CONTROLLER_NAME = "openstack-controller"
@@ -496,3 +497,4 @@ def revert_to_snapshot(name):
 def start_vms():
     for i in hosts:
         local("virsh start %s" % i)
+        time.sleep(10)
