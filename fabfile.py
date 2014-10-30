@@ -1,6 +1,7 @@
 from fabric.api import env, local, parallel, roles, execute, cd
 from fabric.api import run, put, runs_once, settings
 import time
+import os
 
 CONTROLLER_IP = "10.10.1.2"
 CONTROLLER_NAME = "openstack-controller"
@@ -410,6 +411,29 @@ def install_ceilometer():
     execute(install_ceilometer_cindernode)
 
 
+@roles('controller')
+def config_lbaas_controller():
+    cd('/tmp')
+    put('config_lbaas_controller.sh')
+    run('chmod a+x config_lbaas_controller.sh')
+    run('./config_lbaas_controller.sh')
+    run('rm -f config_lbaas_controller.sh')
+
+
+@roles('network', 'node')
+def config_lbaas_other():
+    cd('/tmp')
+    put('config_lbaas_other.sh')
+    run('chmod a+x config_lbaas_other.sh')
+    run('./config_lbaas_other.sh')
+    run('rm -f config_lbaas_other.sh')
+
+
+def config_lbaas():
+    execute(config_lbaas_controller)
+    execute(config_lbaas_other)
+
+
 def install_openstack():
     prepare_openstack_env()
     execute(install_keystone)
@@ -443,17 +467,25 @@ def restart_neutron_network():
     run('service neutron-l3-agent restart')
     run('service neutron-dhcp-agent restart')
     run('service neutron-metadata-agent restart')
+    run('service neutron-lbaas-agent restart')
 
 
 @roles('node')
 def restart_neutron_node():
     run('service neutron-openvswitch-agent restart')
+    run('service neutron-lbaas-agent restart')
 
 
 @roles('controller')
 @runs_once
 def restart_neutron_controller():
     run('service neutron-server restart')
+
+
+def restart_neutron():
+    execute(restart_neutron_controller)
+    execute(restart_neutron_network)
+    execute(restart_neutron_node)
 
 
 @roles('controller')
@@ -507,4 +539,4 @@ def revert_to_snapshot(name):
 def start_vms():
     for i in hosts:
         local("virsh start %s" % i)
-        time.sleep(10)
+        time.sleep(30)
