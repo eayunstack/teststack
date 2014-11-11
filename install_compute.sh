@@ -25,7 +25,7 @@ openstack-config --set /etc/nova/nova.conf DEFAULT vif_plugging_is_fatal False
 openstack-config --set /etc/nova/nova.conf DEFAULT vif_plugging_timeout 0
 
 openstack-config --set /etc/nova/nova.conf \
-DEFAULT novncproxy_base_url http://$CONTROLLER_NAME:6080/vnc_auto.html
+DEFAULT novncproxy_base_url http://$CONTROLLER_EXT_NAME:6080/vnc_auto.html
 openstack-config --set /etc/nova/nova.conf DEFAULT glance_host $CONTROLLER_NAME
 service libvirtd start
 #service messagebus start
