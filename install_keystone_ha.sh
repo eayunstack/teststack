@@ -25,6 +25,7 @@ config_keystone_normal()
     su -s /bin/sh -c "keystone-manage db_sync" keystone
     for i in 10.10.1.51 10.10.1.52
     do
+      #TODO this operatinon may need you type "yes", which is not possible from fabric. you need to fix it.
       scp -r /etc/keystone/ssl $i:/etc/keystone
     done
   else

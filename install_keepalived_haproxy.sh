@@ -76,6 +76,7 @@ NODE_IP=$(ip addr list eth1|grep 'inet '|awk '{print $2}'| cut -d/ -f 1)
 
 CONTROLLER_VIRT_IP=10.10.1.60
 
+#TODO you can remove this.
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
 setenforce 0
 

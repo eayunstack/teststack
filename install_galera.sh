@@ -1,5 +1,20 @@
 #!/bin/bash
 
+#TODO
+#1. galera cluster servers can't boot up together, you must start one first with wsrep_cluster_address=gcomm://, and
+#then start the others
+# 2. as we are running haproxy with galera on the same servers. when galera is listening on 0.0.0.0:3306, then haproxy can't listen on
+# 10.10.1.60. so i make galera just listen on its own server's ip.
+# Eg:
+# galera is listening on 10.10.1.50:3306, 10.10.1.51:3306, 10.10.1.52:3306, haproxy is listening on 10.10.1.60:3306
+# 3. according to openstack's doc, you should you tcp mode, but not http mode in haproxy.cfg for galera.
+# 4. configuration below is needed, or error occurs when keystone is operating on db.
+#run(r'sed -i "N;/\[mysqld\]/a\bind-address = %s" /etc/my.cnf' % CONTROLLER_IP)
+#        s = r'sed -i "N;/\[mysqld\]/a\default-storage-engine = innodb\ninnodb_file_per_table' + \
+#            r'\ncollation-server = utf8_general_ci\ninit-connect = \'SET NAMES utf8\'' + \
+#            r'\ncharacter-set-server = utf8" /etc/my.cnf'
+#
+
 NODE_NAME=$(hostname -s)
 NODE_IP=$(ip addr list eth1|grep 'inet '|head -1|awk '{print $2}'| cut -d/ -f 1)
 
