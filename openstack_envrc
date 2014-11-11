@@ -1,6 +1,6 @@
 # 1. ipaddress and hostname
-CONTROLLER_IP=10.10.1.2
-CONTROLLER_NAME=openstack-controller
+CONTROLLER_IP=10.10.1.60
+CONTROLLER_NAME=10.10.1.60
 NETWORK_IP=10.10.1.3
 NETWORK_NAME=openstack-network
 COMPUTE_IP=
@@ -20,9 +20,10 @@ TENANT_NETWORK_CIDR=10.10.11.0/24
 
 
 CEILOMETER_TOKEN=e2e473e2625c097cbbf2
+ADMIN_TOKEN=e2e473e2625c097cbbf2
 
 # 2. password and email
-PASS=eayun
+PASS=abc123
 EMAIL="test@eayun.test"
 
 DBPASS=$PASS

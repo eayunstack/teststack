@@ -1,18 +1,23 @@
 from fabric.api import env, local, parallel, roles, execute, cd
 from fabric.api import run, put, runs_once, settings
 import time
-import os
+# import os
 
 CONTROLLER_IP = "10.10.1.2"
 CONTROLLER_NAME = "openstack-controller"
 
 
 env.key_filename = "~/.ssh/id_rsa"
-env.roledefs = {'controller': ['openstack-controller'],
+# env.roledefs = {'controller': ['openstack-controller'],
+env.roledefs = {'firstnode': ['ha-controller1'],
+                'othernode': ['ha-controller2', 'ha-controller3'],
+                'controller': ['ha-controller1', 'ha-controller2', 'ha-controller3'],
                 'network': ['openstack-network'],
                 'node': ['openstack-compute1', 'openstack-compute2'],
                 'cinder': ['openstack-cinder1']}
-hosts = ['openstack-controller', 'openstack-network', 'openstack-compute1', 'openstack-compute2', 'openstack-cinder1']
+
+# hosts = ['openstack-controller', 'openstack-network', 'openstack-compute1', 'openstack-compute2', 'openstack-cinder1']
+hosts = ['ha-controller1', 'ha-controller2', 'ha-controller3']
 
 
 @roles('allinone')
@@ -454,10 +459,11 @@ def add_node():
     neutron_compute()
 
 
-@roles('controller', 'network', 'node', 'cinder')
+@roles('controller')
 @parallel
 def order(command=None):
     run(command)
+    time.sleep(2)
 
 
 @roles('network')
@@ -539,4 +545,77 @@ def revert_to_snapshot(name):
 def start_vms():
     for i in hosts:
         local("virsh start %s" % i)
-        time.sleep(30)
+
+
+# =======================================
+#   Under methods are made for ha
+# =======================================
+
+@roles('controller')
+@parallel
+def install_keepalived_haproxy():
+    cd('/tmp')
+    put('openstack_envrc')
+    put('install_keepalived_haproxy.sh')
+    run('chmod a+x install_keepalived_haproxy.sh')
+    run('./install_keepalived_haproxy.sh')
+    run('rm -f install_keepalived_haproxy.sh')
+
+
+@roles('controller')
+# This can't be parallel
+def install_galera():
+    cd('/tmp')
+    put('openstack_envrc')
+    put('install_galera.sh')
+    run('chmod a+x install_galera.sh')
+    run('./install_galera.sh')
+    run('rm -f install_galera.sh')
+
+
+@roles('controller')
+def install_rabbitmq1():
+    run('yum install -y rabbitmq-server')
+    run('service rabbitmq-server start')
+    run('chkconfig rabbitmq-server on')
+    run('service rabbitmq-server stop')
+
+
+@roles('firstnode')
+def install_rabbitmq2():
+    for i in ['10.10.1.51', '10.10.1.52']:
+        run('scp /var/lib/rabbitmq/.erlang.cookie %s:/var/lib/rabbitmq/.erlang.cookie' % i)
+
+
+@roles('controller')
+def install_rabbitmq3():
+    run('service rabbitmq-server start')
+    run('rabbitmqctl cluster_status')
+
+
+@roles('othernode')
+@parallel
+def install_rabbitmq4():
+    run('rabbitmqctl stop_app')
+    run('rabbitmqctl join_cluster rabbit@ha-controller1')
+    run('rabbitmqctl start_app')
+    run('rabbitmqctl cluster_status')
+
+
+def install_rabbitmq():
+    execute(install_rabbitmq1)
+    execute(install_rabbitmq2)
+    execute(install_rabbitmq3)
+    execute(install_rabbitmq4)
+
+
+@roles('controller')
+@parallel
+def install_keystone_ha():
+    cd('/tmp')
+    put('openstack_envrc')
+    put('install_keystone_ha.sh')
+    put('keystone.sql')
+    run('chmod a+x install_keystone_ha.sh')
+    run('./install_keystone_ha.sh')
+    run('rm -f install_keystone_ha.sh keystone_ha.sql')
